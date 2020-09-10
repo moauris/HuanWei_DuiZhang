@@ -1,0 +1,57 @@
+﻿<Window x:Class="HuanweiDZ.Views.DuiZhangWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HuanweiDZ.Views"
+        mc:Ignorable="d"
+        Title="DuiZhangWindow" SizeToContent="WidthAndHeight" WindowStyle="None"
+        MouseDown="OnWindowMouseDown" Style="{StaticResource styleCNfontDefault}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="54"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row ="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="12" HorizontalAlignment="Center">
+            选择导入的文件
+        </TextBlock>
+        <Button Grid.Row="1" Grid.Column="0" Width="180" Height="30" Margin="6" Click="OnImportBankDataClicked">
+            导入文件：银行方
+        </Button>
+        <Button Grid.Row="1" Grid.Column="1" Width="180" Height="30" Margin="6">
+            导入文件：公司方
+        </Button>
+        <DataGrid Grid.Row="3" Grid.Column="0" Width="480" Height="400"
+                  Style="{StaticResource styleWorksheetGrid}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="日期" Width="1*"></DataGridTextColumn>
+                <DataGridTextColumn Header="凭证号" Width="1*"></DataGridTextColumn>
+                <DataGridTextColumn Header="摘要" Width="1*"></DataGridTextColumn>
+                <DataGridTextColumn Header="往来单位" Width="1*"></DataGridTextColumn>
+                <DataGridTextColumn Header="借方" Width="1*"></DataGridTextColumn>
+                <DataGridTextColumn Header="贷方" Width="1*"></DataGridTextColumn>
+                <DataGridTextColumn Header="方向" Width="1*"></DataGridTextColumn>
+                <DataGridTextColumn Header="余额" Width="1*"></DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <DataGrid Grid.Row="3" Grid.Column="1" Width="480" Height="400"
+                  Style="{StaticResource styleWorksheetGrid}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="日期" Width="1*"></DataGridTextColumn>
+                <DataGridTextColumn Header="凭证号" Width="1*"></DataGridTextColumn>
+                <DataGridTextColumn Header="摘要" Width="2*"></DataGridTextColumn>
+                
+                <DataGridTextColumn Header="借方" Width="1*"></DataGridTextColumn>
+                <DataGridTextColumn Header="贷方" Width="1*"></DataGridTextColumn>
+                <DataGridTextColumn Header="方向" Width="1*"></DataGridTextColumn>
+                <DataGridTextColumn Header="余额" Width="1*"></DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </Grid>
+</Window>
