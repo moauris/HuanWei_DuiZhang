@@ -19,7 +19,8 @@ namespace HuanweiDZ.Views
     /// </summary>
     public partial class MainWindow : Window 
     {
-        public string CurrentVersion { get; } = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        public string CurrentVersion { get; } = System.Reflection
+            .Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         public MainWindow()
         {

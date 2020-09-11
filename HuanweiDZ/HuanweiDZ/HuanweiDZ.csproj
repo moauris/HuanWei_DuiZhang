@@ -61,6 +61,7 @@
     </Compile>
     <Compile Include="ImportModule\ExcelReader.cs" />
     <Compile Include="Models\TransactionItem.cs" />
+    <Compile Include="ViewModels\DuizhangWindowViewModel.cs" />
     <Compile Include="Views\DuiZhangWindow.xaml.cs">
       <DependentUpon>DuiZhangWindow.xaml</DependentUpon>
     </Compile>
@@ -94,9 +95,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Page Include="Views\DuiZhangWindow.xaml">
       <SubType>Designer</SubType>

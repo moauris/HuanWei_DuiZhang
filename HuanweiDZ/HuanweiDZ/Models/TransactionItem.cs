@@ -6,8 +6,41 @@ using System.Threading.Tasks;
 
 namespace HuanweiDZ.Models
 {
-    class TransactionItem
+    public class TransactionItem
     {
+        public TransactionItem() { }
+        public TransactionItem(List<string> parms)
+        {
+            //同步日期
+            int year = int.Parse(parms[0]);
+            int month = int.Parse(parms[1]);
+            int day;
+            
+            if (int.TryParse(parms[2], out _))
+            {
+                day = int.Parse(parms[2]);
+            }
+            else
+            {
+                day = 1;
+            }
+            TransDate = new DateTime(year, month, day);
+
+            //同步其他
+            Identifier = parms[3];
+            Summary = parms[4];
+            decimal tempCr = 0;
+            decimal.TryParse(parms[5], out tempCr);
+            Credit = tempCr;
+            decimal tempDr = 0;
+            decimal.TryParse(parms[6], out tempDr);
+            Credit = tempDr;
+            Flow = parms[7];
+            decimal tempRm = 0;
+            decimal.TryParse(parms[8], out tempRm);
+            RemainingBalance = tempRm;
+            //共同步9项
+        }
         private DateTime transdate;
 
         public DateTime TransDate
@@ -48,9 +81,9 @@ namespace HuanweiDZ.Models
             set { debit = value; }
         }
 
-        private Direction flow;
+        private string flow;
 
-        public Direction Flow
+        public string Flow
         {
             get { return flow; }
             set { flow = value; }
@@ -73,22 +106,6 @@ namespace HuanweiDZ.Models
         }
 
 
-    }
-
-    class CompanyTransaction : TransactionItem
-    {
-        public CompanyTransaction()
-        { TransactionSide = Side.Company; }
-    }
-
-    class BankTransaction : TransactionItem
-    {
-        public BankTransaction()
-        { TransactionSide = Side.Bank; }
-    }
-    public enum Direction
-    {
-        Dr,Cr
     }
 
     public enum Side

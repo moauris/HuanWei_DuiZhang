@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using HuanweiDZ.ImportModule;
 using HuanweiDZ.Models;
+using HuanweiDZ.ViewModels;
 using Microsoft.Win32;
 
 namespace HuanweiDZ.Views
@@ -21,12 +23,31 @@ namespace HuanweiDZ.Views
     /// <summary>
     /// Interaction logic for DuiZhangWindow.xaml
     /// </summary>
-    public partial class DuiZhangWindow : Window
+    public partial class DuiZhangWindow : Window, INotifyPropertyChanged
     {
         public DuiZhangWindow()
         {
+
+            ActiveVM = new DuizhangWindowViewModel();
+            
             InitializeComponent();
         }
+
+        protected virtual void OnPropertyChanged(string propName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private DuizhangWindowViewModel activevm;
+
+        public DuizhangWindowViewModel ActiveVM
+        {
+            get { return activevm; }
+            set { activevm = value; OnPropertyChanged("ActiveVM"); }
+        }
+
 
         private void OnWindowMouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -46,7 +67,18 @@ namespace HuanweiDZ.Views
             OpenFileDialog FileDialog = new OpenFileDialog();
             FileDialog.DefaultExt = "*.xls";
             FileDialog.ShowDialog();
-            TransactionItem item = ExcelReader.ReadFromFile(FileDialog.FileName, Side.Bank);
+            ExcelReader reader = new ExcelReader();
+            reader.ProgressChanged += OnBankReaderProgressChanged;
+            ActiveVM.BankLedger = reader.ReadFromFile(FileDialog.FileName, Side.Bank);
+
+        }
+
+        private void OnBankReaderProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            pBar.Value = e.ProgressPercentage;
+            OnPropertyChanged("pBar");
+            txbProgReport.Text = e.UserState.ToString();
+            OnPropertyChanged("txbProgReport");
         }
     }
 }
