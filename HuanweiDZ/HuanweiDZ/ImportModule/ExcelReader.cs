@@ -107,7 +107,10 @@ namespace HuanweiDZ.ImportModule
                     int IncrementProgress = await Task.Run(() => Convert.ToInt32(Increment));
                     Debug.Print($"计算增加进度:{CycleCounter}/{TotalRow} = {IncrementProgress}");
                     Debug.Print($"同步台账条目:{IncrementProgress}/{TotalRow}");
-                    await Task.Run(() => OnProgressChanged(20 + IncrementProgress, $"同步台账条目:{IncrementProgress}/{TotalRow}"));
+                    if (IncrementProgress % 10 == 0)
+                    {
+                        await Task.Run(() => OnProgressChanged(20 + IncrementProgress, $"同步台账条目:{IncrementProgress}/{TotalRow}"));
+                    }
                     await Task.Delay(100);
                     List<string> ParmCollection = new List<string>();
 

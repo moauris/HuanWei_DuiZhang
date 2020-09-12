@@ -34,19 +34,19 @@
                   ItemsSource="{Binding ElementName=window, Path=ActiveVM.BankLedger}"
                   AutoGenerateColumns="False" FontSize="14">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="日期" Width="1*" 
+                <DataGridTextColumn Header="日期" Width="3*" 
                                     Binding="{Binding Path=TransDate}"/>
-                <DataGridTextColumn Header="凭证号" Width="1*"
+                <DataGridTextColumn Header="凭证号" Width="3*"
                                     Binding="{Binding Path=Identifier}"/>
-                <DataGridTextColumn Header="摘要" Width="2*"
+                <DataGridTextColumn Header="摘要" Width="6*"
                                     Binding="{Binding Path=Summary}"/>
-                <DataGridTextColumn Header="借方" Width="1*"
+                <DataGridTextColumn Header="借方" Width="3*"
                                     Binding="{Binding Path=Credit}"/>
-                <DataGridTextColumn Header="贷方" Width="1*"
+                <DataGridTextColumn Header="贷方" Width="3*"
                                     Binding="{Binding Path=Debit}"/>
                 <DataGridTextColumn Header="方向" Width="1*"
                                     Binding="{Binding Path=Flow}"/>
-                <DataGridTextColumn Header="余额" Width="1*"
+                <DataGridTextColumn Header="余额" Width="3*"
                                     Binding="{Binding Path=RemainingBalance}"/>
             </DataGrid.Columns>
         </DataGrid>
