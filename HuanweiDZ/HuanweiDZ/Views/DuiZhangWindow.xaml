@@ -29,10 +29,10 @@
         <Button Grid.Row="1" Grid.Column="1" Width="180" Height="30" Margin="6">
             导入文件：公司方
         </Button>
-        <DataGrid Grid.Row="3" Grid.Column="0" Width="480" Height="400"
+        <DataGrid Grid.Row="3" Grid.Column="0" Width="690" Height="400"
                   Style="{StaticResource styleWorksheetGrid}"
                   ItemsSource="{Binding ElementName=window, Path=ActiveVM.BankLedger}"
-                  AutoGenerateColumns="False">
+                  AutoGenerateColumns="False" FontSize="14">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="日期" Width="1*" 
                                     Binding="{Binding Path=TransDate}"/>
@@ -50,8 +50,9 @@
                                     Binding="{Binding Path=RemainingBalance}"/>
             </DataGrid.Columns>
         </DataGrid>
-        <DataGrid Grid.Row="3" Grid.Column="1" Width="480" Height="400"
-                  Style="{StaticResource styleWorksheetGrid}">
+        <DataGrid Grid.Row="3" Grid.Column="1" Width="690" Height="400"
+                  Style="{StaticResource styleWorksheetGrid}"
+                  AutoGenerateColumns="False" FontSize="14">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="日期" Width="1*"></DataGridTextColumn>
                 <DataGridTextColumn Header="凭证号" Width="1*"></DataGridTextColumn>
@@ -66,13 +67,15 @@
 
         <StatusBar Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
             <StatusBarItem>
-                <ProgressBar x:Name="pBar" Width="180" Height="24">
+                <ProgressBar x:Name="pBar" Width="180" Height="24" 
+                             Value="{Binding ElementName=window, Path=CurrentProgress, Mode=OneWay}">
 
                 </ProgressBar>
             </StatusBarItem>
 
             <StatusBarItem>
-                <TextBlock x:Name="txbProgReport">
+                <TextBlock x:Name="txbProgReport"
+                           Text="{Binding ElementName=window, Path=ProgressMessage, Mode=OneWay}">
 
                 </TextBlock>
             </StatusBarItem>

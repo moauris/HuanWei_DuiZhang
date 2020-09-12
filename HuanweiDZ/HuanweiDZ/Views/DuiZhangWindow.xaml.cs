@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -48,6 +49,21 @@ namespace HuanweiDZ.Views
             set { activevm = value; OnPropertyChanged("ActiveVM"); }
         }
 
+        private int currentProgress;
+
+        public int CurrentProgress
+        {
+            get { return currentProgress; }
+            set { currentProgress = value; OnPropertyChanged("CurrentProgress"); }
+        }
+
+        private string progressMessage;
+
+        public string ProgressMessage
+        {
+            get { return progressMessage; }
+            set { progressMessage = value; OnPropertyChanged("ProgressMessage"); }
+        }
 
         private void OnWindowMouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -62,23 +78,22 @@ namespace HuanweiDZ.Views
             }
         }
 
-        private void OnImportBankDataClicked(object sender, RoutedEventArgs e)
+        private async void OnImportBankDataClicked(object sender, RoutedEventArgs e)
         {
+
             OpenFileDialog FileDialog = new OpenFileDialog();
             FileDialog.DefaultExt = "*.xls";
             FileDialog.ShowDialog();
             ExcelReader reader = new ExcelReader();
             reader.ProgressChanged += OnBankReaderProgressChanged;
-            ActiveVM.BankLedger = reader.ReadFromFile(FileDialog.FileName, Side.Bank);
-
+            ActiveVM.BankLedger = await reader.ReadFromFile(FileDialog.FileName, Side.Bank);
         }
 
         private void OnBankReaderProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            pBar.Value = e.ProgressPercentage;
-            OnPropertyChanged("pBar");
-            txbProgReport.Text = e.UserState.ToString();
-            OnPropertyChanged("txbProgReport");
+            CurrentProgress = e.ProgressPercentage;
+            Debug.Print($"Changed Progress:{CurrentProgress}");
+            ProgressMessage = e.UserState.ToString();
         }
     }
 }
