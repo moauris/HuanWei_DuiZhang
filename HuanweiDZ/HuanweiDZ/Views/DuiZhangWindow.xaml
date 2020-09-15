@@ -23,10 +23,12 @@
         <TextBlock Grid.Row ="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="12" HorizontalAlignment="Center">
             选择导入的文件
         </TextBlock>
-        <Button Grid.Row="1" Grid.Column="0" Width="180" Height="30" Margin="6" Click="OnImportBankDataClicked">
+        <Button Grid.Row="1" Grid.Column="0" Width="180" Height="30" Margin="6" 
+                Click="OnImportBankDataClicked">
             导入文件：银行方
         </Button>
-        <Button Grid.Row="1" Grid.Column="1" Width="180" Height="30" Margin="6">
+        <Button Grid.Row="1" Grid.Column="1" Width="180" Height="30" Margin="6"
+                Click="OnImportCompanyDataClicked">
             导入文件：公司方
         </Button>
         <DataGrid Grid.Row="3" Grid.Column="0" Width="690" Height="400"
@@ -34,11 +36,11 @@
                   ItemsSource="{Binding ElementName=window, Path=ActiveVM.BankLedger}"
                   AutoGenerateColumns="False" FontSize="14">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="日期" Width="3*" 
+                <DataGridTextColumn Header="日期" Width="2*" 
                                     Binding="{Binding Path=TransDate}"/>
-                <DataGridTextColumn Header="凭证号" Width="3*"
+                <DataGridTextColumn Header="凭证号" Width="2*"
                                     Binding="{Binding Path=Identifier}"/>
-                <DataGridTextColumn Header="摘要" Width="6*"
+                <DataGridTextColumn Header="摘要" Width="4*"
                                     Binding="{Binding Path=Summary}"/>
                 <DataGridTextColumn Header="借方" Width="3*"
                                     Binding="{Binding Path=Credit}"/>
@@ -52,16 +54,17 @@
         </DataGrid>
         <DataGrid Grid.Row="3" Grid.Column="1" Width="690" Height="400"
                   Style="{StaticResource styleWorksheetGrid}"
+                  ItemsSource="{Binding ElementName=window, Path=ActiveVM.CompanyLedger}"
                   AutoGenerateColumns="False" FontSize="14">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="日期" Width="1*"></DataGridTextColumn>
-                <DataGridTextColumn Header="凭证号" Width="1*"></DataGridTextColumn>
-                <DataGridTextColumn Header="摘要" Width="2*"></DataGridTextColumn>
+                <DataGridTextColumn Header="日期" Width="2*"></DataGridTextColumn>
+                <DataGridTextColumn Header="凭证号" Width="2*"></DataGridTextColumn>
+                <DataGridTextColumn Header="摘要" Width="4*"></DataGridTextColumn>
                 
-                <DataGridTextColumn Header="借方" Width="1*"></DataGridTextColumn>
-                <DataGridTextColumn Header="贷方" Width="1*"></DataGridTextColumn>
+                <DataGridTextColumn Header="借方" Width="3*"></DataGridTextColumn>
+                <DataGridTextColumn Header="贷方" Width="3*"></DataGridTextColumn>
                 <DataGridTextColumn Header="方向" Width="1*"></DataGridTextColumn>
-                <DataGridTextColumn Header="余额" Width="1*"></DataGridTextColumn>
+                <DataGridTextColumn Header="余额" Width="3*"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
 

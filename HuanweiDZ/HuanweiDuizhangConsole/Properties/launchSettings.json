@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "HuanweiDuizhangConsole": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\MoChen\\Documents\\环卫银行1.xls"
+    }
+  }
+}

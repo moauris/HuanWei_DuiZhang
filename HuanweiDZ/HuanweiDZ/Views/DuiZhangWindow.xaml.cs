@@ -82,14 +82,28 @@ namespace HuanweiDZ.Views
         {
 
             OpenFileDialog FileDialog = new OpenFileDialog();
-            FileDialog.DefaultExt = "*.xls";
-            FileDialog.ShowDialog();
+            FileDialog.Filter = "Excel File (*.xls)|*.xls|Excel File (*.xlsx)|*.xlsx";
+
+            if (FileDialog.ShowDialog() == false) return;
             ExcelReader reader = new ExcelReader();
-            reader.ProgressChanged += OnBankReaderProgressChanged;
+            reader.ProgressChanged += OnReaderProgressChanged;
             ActiveVM.BankLedger = await reader.ReadFromFile(FileDialog.FileName, Side.Bank);
         }
 
-        private void OnBankReaderProgressChanged(object sender, ProgressChangedEventArgs e)
+        private async void OnImportCompanyDataClicked(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog FileDialog = new OpenFileDialog();
+            FileDialog.Filter = "Excel File (*.xls)|*.xls|Excel File (*.xlsx)|*.xlsx";
+
+            if (FileDialog.ShowDialog() == false) return;
+            ExcelReader reader = new ExcelReader();
+            reader.ProgressChanged += OnReaderProgressChanged;
+            ActiveVM.CompanyLedger = await reader.ReadFromFile(FileDialog.FileName, Side.Company);
+        }
+
+
+
+        private void OnReaderProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             CurrentProgress = e.ProgressPercentage;
             Debug.Print($"Changed Progress:{CurrentProgress}");

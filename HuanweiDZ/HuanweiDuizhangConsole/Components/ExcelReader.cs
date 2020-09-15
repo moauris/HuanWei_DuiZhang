@@ -1,20 +1,18 @@
-﻿using System;
+﻿using HuanweiDuizhangConsole.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using HuanweiDZ.Models;
 using EXCEL = Microsoft.Office.Interop.Excel;
 
-namespace HuanweiDZ.ImportModule
+namespace HuanweiDuizhangConsole.ImportExcel
 {
-    
-    class ExcelReader
+    public class ExcelReader
     {
         public event ProgressChangedEventHandler ProgressChanged;
         protected virtual void OnProgressChanged(int progressPercentage)
@@ -25,29 +23,39 @@ namespace HuanweiDZ.ImportModule
         {
             ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(progressPercentage, state));
         }
-        public async Task<ObservableCollection<TransactionItem>> ReadFromFile(string inputFileName, Side side)
+
+        public ExcelReader() { }
+        public Ledger ResultLedger { get; set; }
+        public Ledger ReadFromFile(string filePath, string side)
         {
             OnProgressChanged(0, "读取开始");
 
             //Task.Delay(1000);
             OnProgressChanged(1, "正在检查输入文件名有效性");
-
+            Debug.Print(filePath);
+            return new Ledger();
+            FileInfo inputFile = new FileInfo(filePath);
+            if (!inputFile.Exists)
+            {
+                throw new FileNotFoundException($"没有找到文件，路径： {filePath}");
+            }
+            Console.WriteLine("生成reader实例: " + inputFile.FullName);
             //Task.Delay(1000);
-            FileInfo File = new FileInfo(inputFileName);
-            if (File.Exists == false)
+            if (inputFile.Exists == false)
             {
                 OnProgressChanged(100, "无效文件名");
-                return new ObservableCollection<TransactionItem>();
+                return new Ledger();
             }
 
+            
             OnProgressChanged(5, "正在加载Excel应用实例");
 
             //Task.Delay(1000);
             EXCEL.Application app = new EXCEL.Application();
-            OnProgressChanged(10, $"正在打开工作簿 {inputFileName}");
+            OnProgressChanged(10, $"正在打开工作簿 {inputFile.FullName}");
 
             //Task.Delay(1000);
-            EXCEL.Workbook book = app.Workbooks.Open(inputFileName);
+            EXCEL.Workbook book = app.Workbooks.Open(inputFile.FullName);
 
             OnProgressChanged(15, "正在打开工作表");
 
@@ -71,9 +79,9 @@ namespace HuanweiDZ.ImportModule
             //从A6开始，直到Arow的值为空，开始循环：
             /// 计算工作总量 progress 20 ~ 90, 70 percent
             OnProgressChanged(20, $"正在生成条目循环");
-            var itemCollection = new ObservableCollection<TransactionItem>();
-            itemCollection = await IterateRowItems(sheet, "A6", side);
-            
+            var itemCollection = new Ledger();
+            itemCollection = IterateRowItems(sheet, "A6", side);
+
             OnProgressChanged(90, $"同步台账条目完成");
             #endregion
             OnProgressChanged(95, $"正在清理资源");
@@ -84,68 +92,65 @@ namespace HuanweiDZ.ImportModule
             return itemCollection;
         }
 
-        private async Task<ObservableCollection<TransactionItem>> IterateRowItems(EXCEL.Worksheet worksheet
-            , string startingRangeAddress, Side side)
+        private Ledger IterateRowItems(EXCEL.Worksheet worksheet
+            , string startingRangeAddress, string side)
         {
 
-            var itemCollection = new ObservableCollection<TransactionItem>();
+            var itemCollection = new Ledger();
             string year = (string)worksheet.Range["A4"].Value;
             EXCEL.Range startRange = worksheet.Range[startingRangeAddress];
             int TotalRow = startRange.CurrentRegion.Rows.Count - 5;
             int EndRow = startRange.Row + TotalRow;
-            Debug.Print($"Total Row is: {TotalRow}");
-            Debug.Print($"End Row is: {EndRow}");
+            Debug.Print($"[DEBUG] Total Row is: {TotalRow}");
+            Debug.Print($"[DEBUG] End Row is: {EndRow}");
             //await Task.Delay(5000);
             int CycleCounter = 0;
-            await Task.Run(async () =>
+            for (EXCEL.Range r = startRange; r.Row != EndRow; r = r.Offset[1, 0])
             {
-                for (EXCEL.Range r = startRange; r.Row != EndRow; r = r.Offset[1, 0])
+                //Debug.Print($"{r.Value} is empty?");
+
+                decimal Increment = Convert.ToDecimal(CycleCounter++) / Convert.ToDecimal(TotalRow) * 70M;
+                int IncrementProgress = Convert.ToInt32(Increment);
+                Debug.Print($"计算增加进度:{CycleCounter}/{TotalRow} = {IncrementProgress}");
+                Debug.Print($"同步台账条目:{IncrementProgress}/{TotalRow}");
+                /*if (IncrementProgress % 10 == 0)
                 {
-                    //Debug.Print($"{r.Value} is empty?");
+                    await Task.Run(() => OnProgressChanged(20 + IncrementProgress, $"同步台账条目:{IncrementProgress}/{TotalRow}"));
+                }*/ //每10位进一次progress
 
-                    decimal Increment = await Task.Run(() => Convert.ToDecimal(CycleCounter++) / Convert.ToDecimal(TotalRow) * 70M);
-                    int IncrementProgress = await Task.Run(() => Convert.ToInt32(Increment));
-                    Debug.Print($"计算增加进度:{CycleCounter}/{TotalRow} = {IncrementProgress}");
-                    Debug.Print($"同步台账条目:{IncrementProgress}/{TotalRow}");
-                    /*if (IncrementProgress % 10 == 0)
-                    {
-                        await Task.Run(() => OnProgressChanged(20 + IncrementProgress, $"同步台账条目:{IncrementProgress}/{TotalRow}"));
-                    }*/ //每10位进一次progress
+                OnProgressChanged(20 + IncrementProgress, $"同步台账条目:{IncrementProgress}/{TotalRow}"); //每一位进一次progress
 
-                    await Task.Run(() => OnProgressChanged(20 + IncrementProgress, $"同步台账条目:{IncrementProgress}/{TotalRow}")); //每一位进一次progress
+                //await Task.Delay(100);
+                List<string> ParmCollection = new List<string>();
 
-                    //await Task.Delay(100);
-                    List<string> ParmCollection = new List<string>();
-
-                    Debug.Print("Currently Executing: " + r.Address);
-                    switch (side)
-                    {
-                        case Side.Company:
-                            break;
-                        case Side.Bank:
-                            break;
-                        default:
-                            break;
-                    }
-                    TransactionItem item = new TransactionItem
-                    {
-                        TransDate = DateTime.Now, //测试用
-                        Identifier = r.Offset[0, 2].Value,
-                        Summary = r.Offset[0, 3].Value,
-                        Debit = ConvertDecimal(r.Offset[0, 5].Value),
-                        Credit = ConvertDecimal(r.Offset[0, 6].Value),
-                        Flow = r.Offset[0, 7].Value,
-                        RemainingBalance = ConvertDecimal(r.Offset[0, 8].Value),
-                        TransactionSide = side
-                    };
-                    itemCollection.Add(item);
+                Debug.Print("Currently Executing: " + r.Address);
+                switch (side)
+                {
+                    case "Company":
+                        break;
+                    case "Bank":
+                        break;
+                    default:
+                        break;
                 }
-            });
+                LedgerItem item = new LedgerItem
+                {
+                    EntryDate = DateTime.Now, //测试用
+                    Identifier = (string) r.Offset[0, 2].Value,
+                    Summary = (string) r.Offset[0, 3].Value,
+                    Debit = ConvertDecimal(r.Offset[0, 5].Value),
+                    Credit = ConvertDecimal(r.Offset[0, 6].Value),
+                    Direction = (string) r.Offset[0, 7].Value,
+                    RemainingFund = ConvertDecimal(r.Offset[0, 8].Value),
+                    Side = side
+                };
+                itemCollection.Add(item);
+            }
 
             return itemCollection;
 
         }
-        
+
         /// <summary>
         /// Converts a string to decimal, if cannot, return 0
         /// </summary>
@@ -163,4 +168,8 @@ namespace HuanweiDZ.ImportModule
             return result;
         }
     }
+
+
+
+
 }
