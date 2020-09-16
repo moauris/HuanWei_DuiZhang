@@ -79,16 +79,7 @@ namespace HuanweiDuizhangForm.Services
             OnProgressChanged(20, $"正在生成条目循环");
             Ledger OutputLedger = new Ledger();
 
-            try
-            {
-                IterateRowItems(sheet, "A6", side);
-            }
-            catch (Exception ex)
-            {
-                Debug.Print(ex.StackTrace);
-                Debug.Print(ex.Message);
-            }
-            
+            OutputLedger = IterateRowItems(sheet, "A6", side);
 
             OnProgressChanged(90, $"同步台账条目完成");
             #endregion
@@ -100,7 +91,7 @@ namespace HuanweiDuizhangForm.Services
             return OutputLedger;
         }
 
-        private void IterateRowItems(EXCEL.Worksheet worksheet
+        private Ledger IterateRowItems(EXCEL.Worksheet worksheet
             , string startingRangeAddress, string side)
         {
 
@@ -145,21 +136,11 @@ namespace HuanweiDuizhangForm.Services
                     Side = side
                 };
                 Debug.Print("正在试图添加到集合 itemCollection");
-                /*
-                try
-                {
-                    itemCollection.Add(item);
-                }
-                catch (Exception ex)
-                {
-                    Debug.Print(ex.StackTrace);
-                    Debug.Print(ex.Message);
-                }
-                */
-                Debug.Print(item.ToString());
+                
+                itemCollection.Add(item);
             }
 
-            return;
+            return itemCollection;
 
         }
 

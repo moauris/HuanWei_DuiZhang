@@ -58,8 +58,14 @@ namespace HuanweiDuizhangForm
             ExcelReader reader = new ExcelReader();
             reader.ProgressChanged += reportReaderProgress;
             Ledger ldg = reader.ReadFromFile(filePath, "Company");
-            ldg.PrintContents();
-            PopulateDataGrid(ldg);
+            foreach (LedgerItem item in ldg)
+            {
+                if (item != null)
+                {
+                    textBox3.Text += item.ToString() + "\r\n";
+                }
+                
+            }
         }
 
         private void reportReaderProgress(object sender, ProgressChangedEventArgs e)
@@ -67,10 +73,7 @@ namespace HuanweiDuizhangForm
             Debug.Print("Progress: {0}, Message: {1}", e.ProgressPercentage, e.UserState);
         }
 
-        private void PopulateDataGrid(Ledger ldg)
-        {
-            dataGridView1.DataSource = ldg;
-        }
+        
 
         private void txb_MouseDoubleClick(object sender, MouseEventArgs e)
         {
@@ -88,6 +91,16 @@ namespace HuanweiDuizhangForm
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
         {
 
         }

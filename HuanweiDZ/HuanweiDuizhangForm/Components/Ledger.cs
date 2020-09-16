@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Microsoft.Win32.SafeHandles;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace HuanweiDuizhangForm.Components
@@ -63,7 +65,7 @@ namespace HuanweiDuizhangForm.Components
 
         public IEnumerator<LedgerItem> GetEnumerator()
         {
-            throw new NotImplementedException();
+            return new LedgerItemEnumerator(_contents);
         }
 
         public int IndexOf(LedgerItem item)
@@ -115,12 +117,68 @@ namespace HuanweiDuizhangForm.Components
             throw new NotImplementedException();
         }
 
-        public void PrintContents()
+    }
+
+    internal class LedgerItemEnumerator : IEnumerator<LedgerItem>
+    {
+        private LedgerItem[] _contents;
+        int position = -1;
+        public LedgerItemEnumerator(LedgerItem[] contents)
         {
-            foreach (LedgerItem item in _contents)
+            _contents = contents;
+        }
+
+        object IEnumerator.Current => Current;
+
+        public bool MoveNext()
+        {
+            position++;
+            return (position < _contents.Length);
+        }
+
+        public void Reset()
+        {
+            position = -1;
+        }
+
+        private bool _disposed = false;
+        private SafeHandle _safeHandle = new SafeFileHandle(IntPtr.Zero, true);
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
             {
-                Debug.Print(item.ToString());
+                return;
+            }
+
+            if (disposing)
+            {
+                _safeHandle?.Dispose();
+            }
+            _disposed = true;
+
+        }
+        public LedgerItem Current
+        {
+            get
+            {
+                try
+                {
+                    return _contents[position];
+                }
+                catch (IndexOutOfRangeException)
+                {
+
+                    throw new InvalidOperationException();
+                }
             }
         }
+
     }
 }
