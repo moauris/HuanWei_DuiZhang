@@ -13,11 +13,11 @@ namespace HuanweiDuizhangForm.Components
         public DateTime EntryDate { get; set; }
         public string Identifier { get; set; }
         public string Summary { get; set; }
-        public decimal StartFund { get; set; }
-        public decimal Credit { get; set; }
-        public decimal Debit { get; set; }
+        public double StartFund { get; set; }
+        public double Credit { get; set; }
+        public double Debit { get; set; }
         public string Direction { get; set; }
-        public decimal RemainingFund { get; set; }
+        public double RemainingFund { get; set; }
 
         public bool isBalanced { get; set; } = false;
         public Ledger BalanceItem { get; set; }

@@ -12,11 +12,48 @@ using System.Windows.Forms;
 
 namespace HuanweiDuizhangForm
 {
+    [Flags]
+    public enum Fulfilled
+    {
+        None = 0, Bank = 1, Company = 2, All = 3
+    }
+    public class SidesFulfilledEventArgs : EventArgs
+    {
+        public Fulfilled fullFilled { get; set; }
+        public SidesFulfilledEventArgs(Fulfilled filled)
+        {
+            fullFilled = filled;
+        }
+    }
     public partial class Form1 : Form
     {
+        public Fulfilled fulfillmentStatus { get; set; }
+        public Ledger bankLedger { get; set; }
+        public Ledger comLedger { get; set; }
+        public Ledger BalancedLedger { get; set; }
+        public Ledger UnmatchedLedger { get; set; }
+        public event EventHandler<SidesFulfilledEventArgs> SideLedgerFulfilled;
+        protected virtual void OnSideLedgerFulfilled(Fulfilled filled)
+        {
+            SideLedgerFulfilled?.Invoke(this, new SidesFulfilledEventArgs(filled));
+        }
         public Form1()
         {
+            fulfillmentStatus = Fulfilled.None;
             InitializeComponent();
+            SideLedgerFulfilled += Form1_SideLedgerFulfilled;
+        }
+
+        private void Form1_SideLedgerFulfilled(object sender, SidesFulfilledEventArgs e)
+        {
+            Debug.Print("单侧同步完成" + e.fullFilled);
+            fulfillmentStatus &= e.fullFilled;
+            if (fulfillmentStatus == Fulfilled.All)
+            {
+                Debug.Print("双侧同步完成，正在执行平账逻辑");
+                LedgerBalancer b = new LedgerBalancer(comLedger, bankLedger);
+                b.StartBalanceWork(out _, out _);
+            }
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -38,7 +75,7 @@ namespace HuanweiDuizhangForm
             }
         }
 
-        private void txb_DragDrop(object sender, DragEventArgs e)
+        private void txb_DragDrop_Company(object sender, DragEventArgs e)
         {
             //拖拽释放动作
             string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
@@ -47,17 +84,35 @@ namespace HuanweiDuizhangForm
                 TextBox tbx = (TextBox)sender;
                 tbx.Text = files.First();
                 //生成对账条目对象实例
-                ReadFromFile(tbx.Text);
+                //Read(tbx.Text, "company");
+                ExcelReader reader = new ExcelReader();
+                //reader.ProgressChanged += reportReaderProgress;
+                comLedger = reader.ReadFromFile(tbx.Text, "company");
+                OnSideLedgerFulfilled(Fulfilled.Company);
+            }
+        }
+        private void txb_DragDrop_Bank(object sender, DragEventArgs e)
+        {
+            //拖拽释放动作
+            string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (files != null && files.Any())
+            {
+                TextBox tbx = (TextBox)sender;
+                tbx.Text = files.First();
+                //生成对账条目对象实例
+                //Read(tbx.Text, "bank");
+                ExcelReader reader = new ExcelReader();
+                bankLedger = reader.ReadFromFile(tbx.Text, "bank");
+                OnSideLedgerFulfilled(Fulfilled.Bank);
 
             }
         }
-
-        private void ReadFromFile(string filePath)
+        private void Read(string filePath, string side)
         {
 
             ExcelReader reader = new ExcelReader();
             reader.ProgressChanged += reportReaderProgress;
-            Ledger ldg = reader.ReadFromFile(filePath, "Company");
+            Ledger ldg = reader.ReadFromFile(filePath, side);
             foreach (LedgerItem item in ldg)
             {
                 if (item != null)
@@ -77,6 +132,7 @@ namespace HuanweiDuizhangForm
 
         private void txb_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            /*
             OpenFileDialog fileDlg = new OpenFileDialog();
             fileDlg.Filter = "Excel 工作簿|*.xls|Excel 工作簿|*.xlsx";
 
@@ -87,7 +143,8 @@ namespace HuanweiDuizhangForm
             TextBox tbx = (TextBox)sender;
             tbx.Text = fileDlg.FileName;
             ReadFromFile(tbx.Text);
-
+            */
+            throw new NotImplementedException();
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)

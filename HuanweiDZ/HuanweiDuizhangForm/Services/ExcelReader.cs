@@ -1,5 +1,7 @@
 ﻿using HuanweiDuizhangForm.Components;
+using Microsoft.Office.Interop.Excel;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -64,7 +66,6 @@ namespace HuanweiDuizhangForm.Services
             //Task.Delay(1000);
             //填充item对象
 
-            #region 银行端同步
             //值为“2020年”，只取前4位
             //从A6列开始，每行循环直到没有内容为止
 
@@ -82,7 +83,6 @@ namespace HuanweiDuizhangForm.Services
             OutputLedger = IterateRowItems(sheet, "A6", side);
 
             OnProgressChanged(90, $"同步台账条目完成");
-            #endregion
             OnProgressChanged(95, $"正在清理资源");
             book.Close(false, null, null);
             app.Quit();
@@ -105,6 +105,36 @@ namespace HuanweiDuizhangForm.Services
             Debug.Print($"[DEBUG] End Row is: {EndRow}");
             //await Task.Delay(5000);
             int CycleCounter = 0;
+            SyncItemOffset offset = new SyncItemOffset
+            {
+                Identifier = 3,
+                Summary = 4,
+                Debit = 5,
+                Credit = 6,
+                Direction = 7,
+                RemainingFund = 8
+            };
+            switch (side)
+            {
+                case "company":
+                    offset.Identifier = 3;
+                    offset.Summary = 4;
+                    offset.Debit = 5;
+                    offset.Credit = 6;
+                    offset.Direction = 7;
+                    offset.RemainingFund = 8;
+                break;
+                case "bank":
+                    offset.Identifier = 2;
+                    offset.Summary = 3;
+                    offset.Debit = 5;
+                    offset.Credit = 6;
+                    offset.Direction = 7;
+                    offset.RemainingFund = 8;
+                    break;
+                default:
+                    break;
+            }
             for (EXCEL.Range r = startRange; r.Row != EndRow; r = r.Offset[1, 0])
             {
                 //Debug.Print($"{r.Value} is empty?");
@@ -124,15 +154,18 @@ namespace HuanweiDuizhangForm.Services
                 List<string> ParmCollection = new List<string>();
 
                 Debug.Print("正在同步工作表地址: " + r.Address);
+
+
                 LedgerItem item = new LedgerItem
                 {
                     EntryDate = DateTime.Now, //测试用
-                    Identifier = (string)r.Offset[0, 2].Value,
-                    Summary = (string)r.Offset[0, 3].Value,
-                    Debit = ConvertDecimal(r.Offset[0, 5].Value),
-                    Credit = ConvertDecimal(r.Offset[0, 6].Value),
-                    Direction = (string)r.Offset[0, 7].Value,
-                    RemainingFund = ConvertDecimal(r.Offset[0, 8].Value),
+                    
+                    Identifier = (string)r.Offset[0, offset.Identifier].Value,
+                    Summary = (string)r.Offset[0, offset.Summary].Value,
+                    Debit = ConvertDecimal(r.Offset[0, offset.Debit]),
+                    Credit = ConvertDecimal(r.Offset[0, offset.Credit]),
+                    Direction = (string)r.Offset[0, offset.Direction].Value,
+                    RemainingFund = ConvertDecimal(r.Offset[0, offset.RemainingFund]),
                     Side = side
                 };
                 Debug.Print("正在试图添加到集合 itemCollection");
@@ -149,20 +182,24 @@ namespace HuanweiDuizhangForm.Services
         /// </summary>
         /// <param name="input"> Potential Decimal String </param>
         /// <returns></returns>
-        private decimal ConvertDecimal(object input)
+        private double ConvertDecimal(EXCEL.Range range)
         {
-
-            decimal result = 0;
-            if (input is string && decimal.TryParse(input as string, out _))
-            {
-                result = decimal.Parse(input as string);
-            }
-            if (input is decimal) result = (decimal)input;
+            double result = 0;
+            if (range.Value == null) return 0;
+            double.TryParse(range.Value.ToString(), out result);
             return result;
         }
     }
 
-
+    struct SyncItemOffset
+    {
+        public int Identifier { get; set; }
+        public int Summary { get; set; }
+        public int Debit { get; set; }
+        public int Credit { get; set; }
+        public int Direction { get; set; }
+        public int RemainingFund { get; set; }
+    }
 
 
 }
