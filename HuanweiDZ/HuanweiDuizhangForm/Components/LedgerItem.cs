@@ -20,7 +20,7 @@ namespace HuanweiDuizhangForm.Components
         public decimal RemainingFund { get; set; }
 
         public bool isBalanced { get; set; } = false;
-        public ObservableCollection<LedgerItem> BalanceItem { get; set; }
+        public Ledger BalanceItem { get; set; }
 
         public bool Equals(LedgerItem other)
         {
@@ -36,6 +36,7 @@ namespace HuanweiDuizhangForm.Components
                 StartFund, Credit, Debit, Direction,
                 RemainingFund);
         }
+
     }
 
 }
