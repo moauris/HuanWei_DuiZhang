@@ -30,8 +30,6 @@ namespace HuanweiDuizhangForm
         public Fulfilled fulfillmentStatus { get; set; }
         public Ledger bankLedger { get; set; }
         public Ledger comLedger { get; set; }
-        public Ledger BalancedLedger { get; set; }
-        public Ledger UnmatchedLedger { get; set; }
         public event EventHandler<SidesFulfilledEventArgs> SideLedgerFulfilled;
         protected virtual void OnSideLedgerFulfilled(Fulfilled filled)
         {
@@ -47,12 +45,22 @@ namespace HuanweiDuizhangForm
         private void Form1_SideLedgerFulfilled(object sender, SidesFulfilledEventArgs e)
         {
             Debug.Print("单侧同步完成" + e.fullFilled);
-            fulfillmentStatus &= e.fullFilled;
+            fulfillmentStatus = e.fullFilled | fulfillmentStatus;
+            Debug.Print("目前窗体同步状态：{0}", fulfillmentStatus);
             if (fulfillmentStatus == Fulfilled.All)
             {
                 Debug.Print("双侧同步完成，正在执行平账逻辑");
                 LedgerBalancer b = new LedgerBalancer(comLedger, bankLedger);
-                b.StartBalanceWork(out _, out _);
+                Ledger BalancedLedger, UnMatchedLedger;
+                b.StartBalanceWork(out BalancedLedger, out UnMatchedLedger);
+                foreach (LedgerItem item in BalancedLedger)
+                {
+                    Debug.Print("{0} BALANCE {1}", item, item.BalanceItem[0]);
+                }
+                foreach (LedgerItem item in UnMatchedLedger)
+                {
+                    Debug.Print("{0} UNMATCH", item);
+                }
             }
         }
 
