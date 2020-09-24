@@ -1,6 +1,5 @@
 ﻿using ExcelDataReader;
 using HuanweiDZ.Components;
-using Microsoft.Office.Interop.Excel;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
@@ -10,7 +9,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using EXCEL = Microsoft.Office.Interop.Excel;
 using XLSReader = ExcelDataReader;
 
 namespace HuanweiDZ.Services
@@ -19,6 +17,11 @@ namespace HuanweiDZ.Services
     {
         public void TestRead(string filePath)
         {
+            Trace.Listeners.Clear();
+            string LogFileName = string.Format(".\\{0}_Trace.log"
+                , DateTime.Now.ToString("yyyy_MMdd_HHmmss")) ;
+            TextWriterTraceListener traceListener = new TextWriterTraceListener(LogFileName);
+            Trace.Listeners.Add(traceListener);
             TraceWrapper("正在开始读取文件" + filePath);
             using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
             {
@@ -47,19 +50,21 @@ namespace HuanweiDZ.Services
                     } while (reader.NextResult());
                 }
             }
-
+            Trace.Close();
         }
 
         [Conditional ("DEBUG")]
         private void TraceWrapper(string message)
         {
             string DebugMessage = string.Format("[{0}] @ <{1}>: {2}, EOL"
-                , DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                , DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")
                 , "ExcelReaderXLSReader"
                 , message);
             Trace.WriteLine(DebugMessage);
         }
     }
+
+#if USE_MS_INTEROP
     public class ExcelReader
     {
         public event ProgressChangedEventHandler ProgressChanged;
@@ -74,6 +79,7 @@ namespace HuanweiDZ.Services
 
         public ExcelReader() { }
         public Ledger ResultLedger { get; set; }
+
         public Ledger ReadFromFile(string filePath, string side)
         {
             OnProgressChanged(0, "读取开始");
@@ -247,6 +253,7 @@ namespace HuanweiDZ.Services
         public int Direction { get; set; }
         public int RemainingFund { get; set; }
     }
-
+    
+#endif
 
 }
