@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
-namespace HuanweiDuizhangForm.Components
+namespace HuanweiDZ.Components
 {
     public class LedgerItem : IEquatable<LedgerItem>
     {

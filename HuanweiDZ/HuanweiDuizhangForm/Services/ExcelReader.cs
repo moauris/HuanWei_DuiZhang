@@ -1,4 +1,5 @@
-﻿using HuanweiDuizhangForm.Components;
+﻿using ExcelDataReader;
+using HuanweiDZ.Components;
 using Microsoft.Office.Interop.Excel;
 using System;
 using System.CodeDom;
@@ -10,9 +11,55 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using EXCEL = Microsoft.Office.Interop.Excel;
+using XLSReader = ExcelDataReader;
 
-namespace HuanweiDuizhangForm.Services
+namespace HuanweiDZ.Services
 {
+    public class ExcelReaderXLSReader
+    {
+        public void TestRead(string filePath)
+        {
+            TraceWrapper("正在开始读取文件" + filePath);
+            using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    do
+                    {
+                        while (reader.Read())
+                        {
+                            string[] RowContent = new string[9];
+                            for (int r = 0; r < 9; r++)
+                            {
+                                object raw = reader.GetValue(r);
+                                if (raw == null)
+                                {
+                                    RowContent[r] = string.Empty;
+                                }
+                                else
+                                {
+                                    RowContent[r] = reader.GetValue(r).ToString();
+                                }
+                            }
+                            string RowContents = string.Join(",", RowContent);
+                            TraceWrapper(RowContents);
+                        }
+                    } while (reader.NextResult());
+                }
+            }
+
+        }
+
+        [Conditional ("DEBUG")]
+        private void TraceWrapper(string message)
+        {
+            string DebugMessage = string.Format("[{0}] @ <{1}>: {2}, EOL"
+                , DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                , "ExcelReaderXLSReader"
+                , message);
+            Trace.WriteLine(DebugMessage);
+        }
+    }
     public class ExcelReader
     {
         public event ProgressChangedEventHandler ProgressChanged;

@@ -3,11 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HuanweiDZ", "HuanweiDZ\HuanweiDZ.csproj", "{9DA305FB-59C4-42D1-A4D9-D16783F68510}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HuanweiDuizhangConsole", "HuanweiDuizhangConsole\HuanweiDuizhangConsole.csproj", "{CBD1A9C1-DD61-4BBE-A461-625939BAF245}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HuanweiDuizhangForm", "HuanweiDuizhangForm\HuanweiDuizhangForm.csproj", "{A7612433-8E45-40A2-8DEB-D16304441F56}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HuanweiDZ", "HuanweiDuizhangForm\HuanweiDZ.csproj", "{A7612433-8E45-40A2-8DEB-D16304441F56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,14 +11,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9DA305FB-59C4-42D1-A4D9-D16783F68510}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9DA305FB-59C4-42D1-A4D9-D16783F68510}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9DA305FB-59C4-42D1-A4D9-D16783F68510}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9DA305FB-59C4-42D1-A4D9-D16783F68510}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CBD1A9C1-DD61-4BBE-A461-625939BAF245}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CBD1A9C1-DD61-4BBE-A461-625939BAF245}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CBD1A9C1-DD61-4BBE-A461-625939BAF245}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CBD1A9C1-DD61-4BBE-A461-625939BAF245}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A7612433-8E45-40A2-8DEB-D16304441F56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A7612433-8E45-40A2-8DEB-D16304441F56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7612433-8E45-40A2-8DEB-D16304441F56}.Release|Any CPU.ActiveCfg = Release|Any CPU

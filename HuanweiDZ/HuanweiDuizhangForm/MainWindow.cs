@@ -1,5 +1,5 @@
-﻿using HuanweiDuizhangForm.Components;
-using HuanweiDuizhangForm.Services;
+﻿using HuanweiDZ.Components;
+using HuanweiDZ.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace HuanweiDuizhangForm
+namespace HuanweiDZ
 {
     [Flags]
     public enum Fulfilled
@@ -25,7 +25,7 @@ namespace HuanweiDuizhangForm
             fullFilled = filled;
         }
     }
-    public partial class Form1 : Form
+    public partial class MainWindow : Form
     {
         public Fulfilled fulfillmentStatus { get; set; }
         public Ledger bankLedger { get; set; }
@@ -35,7 +35,7 @@ namespace HuanweiDuizhangForm
         {
             SideLedgerFulfilled?.Invoke(this, new SidesFulfilledEventArgs(filled));
         }
-        public Form1()
+        public MainWindow()
         {
             fulfillmentStatus = Fulfilled.None;
             InitializeComponent();
@@ -93,10 +93,12 @@ namespace HuanweiDuizhangForm
                 tbx.Text = files.First();
                 //生成对账条目对象实例
                 //Read(tbx.Text, "company");
-                ExcelReader reader = new ExcelReader();
+                //ExcelReader reader = new ExcelReader();
+                ExcelReaderXLSReader xlsReader = new ExcelReaderXLSReader();
+                xlsReader.TestRead(tbx.Text);
                 //reader.ProgressChanged += reportReaderProgress;
-                comLedger = reader.ReadFromFile(tbx.Text, "company");
-                OnSideLedgerFulfilled(Fulfilled.Company);
+                //comLedger = reader.ReadFromFile(tbx.Text, "company");
+                //OnSideLedgerFulfilled(Fulfilled.Company);
             }
         }
         private void txb_DragDrop_Bank(object sender, DragEventArgs e)
@@ -107,14 +109,17 @@ namespace HuanweiDuizhangForm
             {
                 TextBox tbx = (TextBox)sender;
                 tbx.Text = files.First();
+                ExcelReaderXLSReader xlsReader = new ExcelReaderXLSReader();
+                xlsReader.TestRead(tbx.Text);
                 //生成对账条目对象实例
                 //Read(tbx.Text, "bank");
-                ExcelReader reader = new ExcelReader();
-                bankLedger = reader.ReadFromFile(tbx.Text, "bank");
-                OnSideLedgerFulfilled(Fulfilled.Bank);
+                //ExcelReader reader = new ExcelReader();
+                //bankLedger = reader.ReadFromFile(tbx.Text, "bank");
+                //OnSideLedgerFulfilled(Fulfilled.Bank);
 
             }
         }
+        /*
         private void Read(string filePath, string side)
         {
 
@@ -130,7 +135,7 @@ namespace HuanweiDuizhangForm
                 
             }
         }
-
+        */
         private void reportReaderProgress(object sender, ProgressChangedEventArgs e)
         {
             Debug.Print("Progress: {0}, Message: {1}", e.ProgressPercentage, e.UserState);

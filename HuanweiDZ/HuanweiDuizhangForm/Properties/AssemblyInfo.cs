@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("HuanweiDuizhangForm")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("HuanweiDZ")]
+[assembly: AssemblyDescription("一个基于 WinForm 的对账工具")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("HuanweiDuizhangForm")]
+[assembly: AssemblyProduct("HuanweiDZ")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

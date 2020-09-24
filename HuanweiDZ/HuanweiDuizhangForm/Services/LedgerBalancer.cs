@@ -1,10 +1,10 @@
-﻿using HuanweiDuizhangForm.Components;
+﻿using HuanweiDZ.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace HuanweiDuizhangForm.Services
+namespace HuanweiDZ.Services
 {
     class LedgerBalancer
     {

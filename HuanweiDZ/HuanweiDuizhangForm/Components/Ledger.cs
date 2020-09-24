@@ -8,7 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace HuanweiDuizhangForm.Components
+namespace HuanweiDZ.Components
 {
     public class Ledger : IList<LedgerItem>
     {
