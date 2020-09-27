@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Forms;
 using XLSReader = ExcelDataReader;
 
 namespace HuanweiDZ.Services
@@ -23,34 +24,71 @@ namespace HuanweiDZ.Services
             TextWriterTraceListener traceListener = new TextWriterTraceListener(LogFileName);
             Trace.Listeners.Add(traceListener);
             TraceWrapper("正在开始读取文件" + filePath);
-            using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+
+            FileInfo file = new FileInfo(filePath);
+            try
             {
-                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))//当文件被打开时会报错。
                 {
-                    do
+                    using (var reader = ExcelReaderFactory.CreateReader(stream)) //需要加入文件后缀和类型的判定
                     {
-                        while (reader.Read())
+                        do
                         {
-                            string[] RowContent = new string[9];
-                            for (int r = 0; r < 9; r++)
+                            while (reader.Read())
                             {
-                                object raw = reader.GetValue(r);
-                                if (raw == null)
+                                string[] RowContent = new string[9];
+                                int NonEmptyLength = 0;
+                                for (int r = 0; r < 9; r++)
                                 {
-                                    RowContent[r] = string.Empty;
+                                    object raw = reader.GetValue(r);
+                                    if (raw == null)
+                                    {
+                                        RowContent[r] = string.Empty;
+                                    }
+                                    else
+                                    {
+                                        RowContent[r] = reader.GetValue(r).ToString();
+                                        NonEmptyLength++;
+                                    }
                                 }
-                                else
+                                TraceWrapper("非空单行元素判定: " + NonEmptyLength);
+                                //string RowContents = string.Join(",", RowContent);
+                                
+                                //TraceWrapper(RowContents);
+                                //以下代码生成 LedgerItem 对象
+                                //两侧符合要求的对象：第0-4不为空，5或6至少有一位不为空，不为空时可以被转换为double。7为平、借、或者贷，余额为double
+                                LedgerItem ledgerItem = LedgerItem.Parse(RowContent, "Company");
+                                if (ledgerItem != null)
                                 {
-                                    RowContent[r] = reader.GetValue(r).ToString();
+                                    TraceWrapper(ledgerItem.ToString());
                                 }
+                                
                             }
-                            string RowContents = string.Join(",", RowContent);
-                            TraceWrapper(RowContents);
-                        }
-                    } while (reader.NextResult());
+                        } while (reader.NextResult());
+                    }
                 }
             }
-            Trace.Close();
+            catch (IOException exp)
+            {
+
+                TraceWrapper("遇到了文件读写错误：");
+                TraceWrapper(exp.Message);
+
+                MessageBox.Show(
+                    "文件读写遇到了错误。\r\n请检查目标工作簿是否已经打开或者被其他程序占用。\r\n请释放工作簿后再次尝试。",
+                    "发生了错误：目标文件被程序占用。",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                    );
+
+            }
+            finally
+            {
+                MessageBox.Show("读取文件完成。", "完成", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Trace.Close();
+
+            }
+            
         }
 
         [Conditional ("DEBUG")]

@@ -39,7 +39,7 @@ namespace HuanweiDZ.Services
                     {
                         if (baItem != null)
                         {
-                            coItem.BalanceItem.Add(baItem);
+                            //coItem.BalanceItem.Add(baItem);
                             balanced.Add(coItem);
                             ledger1.Remove(coItem);
                             ledger2.Remove(baItem);

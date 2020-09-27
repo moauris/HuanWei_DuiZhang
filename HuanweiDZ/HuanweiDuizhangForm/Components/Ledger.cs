@@ -37,6 +37,7 @@ namespace HuanweiDZ.Components
 
         public void Add(LedgerItem item)
         {
+            if (item == null) return; //使用Add的时候需要判定item不为null
             _contents[_count] = item;
             _count++;
         }
@@ -116,6 +117,20 @@ namespace HuanweiDZ.Components
         {
             throw new NotImplementedException();
         }
+
+        #region Custom Methods
+        public double Sum()
+        {
+            double TotalCredit = 0d, TotalDebit = 0d;
+            foreach (LedgerItem item in _contents)
+            {
+                TotalCredit += item.Credit;
+                TotalDebit += item.Debit;
+            }
+
+            return TotalDebit - TotalCredit;
+        }
+        #endregion
 
     }
 

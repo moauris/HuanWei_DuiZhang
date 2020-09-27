@@ -55,7 +55,8 @@ namespace HuanweiDZ
                 b.StartBalanceWork(out BalancedLedger, out UnMatchedLedger);
                 foreach (LedgerItem item in BalancedLedger)
                 {
-                    Debug.Print("{0} BALANCE {1}", item, item.BalanceItem[0]);
+                    //Debug.Print("{0} BALANCE {1}", item, item.BalanceItem[0]);
+                    throw new NotImplementedException();
                 }
                 foreach (LedgerItem item in UnMatchedLedger)
                 {
