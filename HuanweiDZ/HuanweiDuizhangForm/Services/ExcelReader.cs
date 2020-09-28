@@ -16,8 +16,9 @@ namespace HuanweiDZ.Services
 {
     public class ExcelReaderXLSReader
     {
-        public void TestRead(string filePath)
+        public Ledger Read(string filePath, string side)
         {
+            Ledger res = new Ledger();
             Trace.Listeners.Clear();
             string LogFileName = string.Format(".\\{0}_Trace.log"
                 , DateTime.Now.ToString("yyyy_MMdd_HHmmss")) ;
@@ -28,7 +29,7 @@ namespace HuanweiDZ.Services
             FileInfo file = new FileInfo(filePath);
             try
             {
-                using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))//当文件被打开时会报错。
+                using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))//当文件被占用时会报错。
                 {
                     using (var reader = ExcelReaderFactory.CreateReader(stream)) //需要加入文件后缀和类型的判定
                     {
@@ -57,9 +58,10 @@ namespace HuanweiDZ.Services
                                 //TraceWrapper(RowContents);
                                 //以下代码生成 LedgerItem 对象
                                 //两侧符合要求的对象：第0-4不为空，5或6至少有一位不为空，不为空时可以被转换为double。7为平、借、或者贷，余额为double
-                                LedgerItem ledgerItem = LedgerItem.Parse(RowContent, "Company");
+                                LedgerItem ledgerItem = LedgerItem.Parse(RowContent, side);
                                 if (ledgerItem != null)
                                 {
+                                    res.Add(ledgerItem);
                                     TraceWrapper(ledgerItem.ToString());
                                 }
                                 
@@ -85,10 +87,10 @@ namespace HuanweiDZ.Services
             finally
             {
                 MessageBox.Show("读取文件完成。", "完成", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
                 Trace.Close();
-
             }
-            
+            return res;
         }
 
         [Conditional ("DEBUG")]

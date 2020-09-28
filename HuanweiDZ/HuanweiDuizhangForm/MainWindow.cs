@@ -96,10 +96,14 @@ namespace HuanweiDZ
                 //Read(tbx.Text, "company");
                 //ExcelReader reader = new ExcelReader();
                 ExcelReaderXLSReader xlsReader = new ExcelReaderXLSReader();
-                xlsReader.TestRead(tbx.Text);
+                comLedger = xlsReader.Read(tbx.Text, "Company");
                 //reader.ProgressChanged += reportReaderProgress;
                 //comLedger = reader.ReadFromFile(tbx.Text, "company");
                 //OnSideLedgerFulfilled(Fulfilled.Company);
+                foreach (LedgerItem item in comLedger)
+                {
+                    textBox3.Text += item.ToString() + "\r\n";
+                }
             }
         }
         private void txb_DragDrop_Bank(object sender, DragEventArgs e)
@@ -111,13 +115,16 @@ namespace HuanweiDZ
                 TextBox tbx = (TextBox)sender;
                 tbx.Text = files.First();
                 ExcelReaderXLSReader xlsReader = new ExcelReaderXLSReader();
-                xlsReader.TestRead(tbx.Text);
+                bankLedger = xlsReader.Read(tbx.Text, "Bank");
                 //生成对账条目对象实例
                 //Read(tbx.Text, "bank");
                 //ExcelReader reader = new ExcelReader();
                 //bankLedger = reader.ReadFromFile(tbx.Text, "bank");
                 //OnSideLedgerFulfilled(Fulfilled.Bank);
-
+                foreach (LedgerItem item in bankLedger)
+                {
+                    textBox3.Text += item.ToString() + "\r\n";
+                }
             }
         }
         /*
