@@ -19,12 +19,12 @@ namespace HuanweiDZ.Services
         public Ledger Read(string filePath, string side)
         {
             Ledger res = new Ledger();
-            Trace.Listeners.Clear();
+            //Trace.Listeners.Clear();
             string LogFileName = string.Format(".\\{0}_Trace.log"
                 , DateTime.Now.ToString("yyyy_MMdd_HHmmss")) ;
-            TextWriterTraceListener traceListener = new TextWriterTraceListener(LogFileName);
-            Trace.Listeners.Add(traceListener);
-            TraceWrapper("正在开始读取文件" + filePath);
+            //TextWriterTraceListener traceListener = new TextWriterTraceListener(LogFileName);
+            //Trace.Listeners.Add(traceListener);
+            //TraceWrapper("正在开始读取文件" + filePath);
 
             FileInfo file = new FileInfo(filePath);
             try
@@ -52,7 +52,7 @@ namespace HuanweiDZ.Services
                                         NonEmptyLength++;
                                     }
                                 }
-                                TraceWrapper("非空单行元素判定: " + NonEmptyLength);
+                                //TraceWrapper("非空单行元素判定: " + NonEmptyLength);
                                 //string RowContents = string.Join(",", RowContent);
                                 
                                 //TraceWrapper(RowContents);
@@ -62,7 +62,7 @@ namespace HuanweiDZ.Services
                                 if (ledgerItem != null)
                                 {
                                     res.Add(ledgerItem);
-                                    TraceWrapper(ledgerItem.ToString());
+                                    //TraceWrapper(ledgerItem.ToString());
                                 }
                                 
                             }
@@ -73,8 +73,8 @@ namespace HuanweiDZ.Services
             catch (IOException exp)
             {
 
-                TraceWrapper("遇到了文件读写错误：");
-                TraceWrapper(exp.Message);
+                //TraceWrapper("遇到了文件读写错误：");
+                //TraceWrapper(exp.Message);
 
                 MessageBox.Show(
                     "文件读写遇到了错误。\r\n请检查目标工作簿是否已经打开或者被其他程序占用。\r\n请释放工作簿后再次尝试。",
@@ -87,12 +87,12 @@ namespace HuanweiDZ.Services
             finally
             {
                 MessageBox.Show("读取文件完成。", "完成", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                
-                Trace.Close();
+
+                //Trace.Flush();
             }
             return res;
         }
-
+        /*
         [Conditional ("DEBUG")]
         private void TraceWrapper(string message)
         {
@@ -102,6 +102,7 @@ namespace HuanweiDZ.Services
                 , message);
             Trace.WriteLine(DebugMessage);
         }
+        */
     }
 
 #if USE_MS_INTEROP

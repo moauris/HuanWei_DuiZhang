@@ -7,8 +7,10 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace HuanweiDZ
 {
@@ -44,24 +46,31 @@ namespace HuanweiDZ
 
         private void Form1_SideLedgerFulfilled(object sender, SidesFulfilledEventArgs e)
         {
+            
+
             Debug.Print("单侧同步完成" + e.fullFilled);
             fulfillmentStatus = e.fullFilled | fulfillmentStatus;
             Debug.Print("目前窗体同步状态：{0}", fulfillmentStatus);
             if (fulfillmentStatus == Fulfilled.All)
             {
+                DialogResult answer = MessageBox.Show("两表准备完毕，是否开始执行平帐？", "准备完毕", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (answer == DialogResult.No) return;
                 Debug.Print("双侧同步完成，正在执行平账逻辑");
-                LedgerBalancer b = new LedgerBalancer(comLedger, bankLedger);
+                LedgerBalancer b = new LedgerBalancer();
                 Ledger BalancedLedger, UnMatchedLedger;
-                b.StartBalanceWork(out BalancedLedger, out UnMatchedLedger);
-                foreach (LedgerItem item in BalancedLedger)
+
+                string message = string.Format("##### 以下为平账款项，共{0}条 #####\r\n"
+                    , b.StartBalanceWork(comLedger, bankLedger, out BalancedLedger, out UnMatchedLedger));
+                for (int i = 0; i < BalancedLedger.Count; i++)
                 {
-                    //Debug.Print("{0} BALANCE {1}", item, item.BalanceItem[0]);
-                    throw new NotImplementedException();
+                    message += BalancedLedger[i].ToString() + "\r\n";
                 }
-                foreach (LedgerItem item in UnMatchedLedger)
+                message += "##### 以下为未平账目 #####\r\n";
+                for (int i = 0; i < UnMatchedLedger.Count; i++)
                 {
-                    Debug.Print("{0} UNMATCH", item);
+                    message += UnMatchedLedger[i].ToString() + "\r\n";
                 }
+                textBox3.Text = message;
             }
         }
 
@@ -100,10 +109,23 @@ namespace HuanweiDZ
                 //reader.ProgressChanged += reportReaderProgress;
                 //comLedger = reader.ReadFromFile(tbx.Text, "company");
                 //OnSideLedgerFulfilled(Fulfilled.Company);
-                foreach (LedgerItem item in comLedger)
+
+                //MessageBox.Show(string.Format("The Ledger size is {0}", comLedger.Count),"Starting Showing in TextBox");
+                string message = textBox3.Text;
+                for (int i = 0; i < comLedger.Count; i++)
                 {
-                    textBox3.Text += item.ToString() + "\r\n";
+                    if (comLedger[i] == null)
+                    {
+                        message += "null item!\r\n";
+                    }
+                    else
+                    {
+                        message += comLedger[i].ToString() + "\r\n";
+                    }
+
                 }
+                textBox3.Text = message;
+                OnSideLedgerFulfilled(Fulfilled.Company);
             }
         }
         private void txb_DragDrop_Bank(object sender, DragEventArgs e)
@@ -121,10 +143,21 @@ namespace HuanweiDZ
                 //ExcelReader reader = new ExcelReader();
                 //bankLedger = reader.ReadFromFile(tbx.Text, "bank");
                 //OnSideLedgerFulfilled(Fulfilled.Bank);
-                foreach (LedgerItem item in bankLedger)
+                MessageBox.Show(string.Format("The Ledger size is {0}", comLedger.Count), "Starting Showing in TextBox");
+                string message = textBox3.Text;
+                for (int i = 0; i < bankLedger.Count; i++)
                 {
-                    textBox3.Text += item.ToString() + "\r\n";
+                    if (bankLedger[i] == null)
+                    {
+                        message += "null item!\r\n";
+                    }
+                    else
+                    {
+                        message += bankLedger[i].ToString() + "\r\n";
+                    }
                 }
+                textBox3.Text = message;
+                OnSideLedgerFulfilled(Fulfilled.Bank);
             }
         }
         /*

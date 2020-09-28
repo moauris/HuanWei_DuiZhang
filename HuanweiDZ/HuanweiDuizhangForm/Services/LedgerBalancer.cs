@@ -1,6 +1,7 @@
 ﻿using HuanweiDZ.Components;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -8,55 +9,54 @@ namespace HuanweiDZ.Services
 {
     class LedgerBalancer
     {
-        public Ledger ledger1 { get; set; }
-        public Ledger ledger2 { get; set; }
-
-        public LedgerBalancer(Ledger company, Ledger bank)
-        {
-            ledger1 = company;
-            ledger2 = bank;
-        }
-
-        public int StartBalanceWork(out Ledger balanced, out Ledger unmatched)
+        
+        public int StartBalanceWork(Ledger company, Ledger bank, out Ledger balanced, out Ledger unmatched)
         {
             int FoundBalanced = 0;
-            if (ledger1 == null || ledger2 == null)
+            if (company == null || bank == null)
             {
                 balanced = null;
                 unmatched = null;
                 return -1;
             }
             //开始对账活动
+            Debug.Print("开始对账工作：");
             balanced = new Ledger();
             unmatched = new Ledger();
 
             //由公司侧开始循环，寻找所有匹配的银行账目， 生成一次匹配成功的账本
-            foreach (LedgerItem coItem in ledger1)
+            Debug.Print("由公司侧开始循环，寻找所有匹配的银行账目， 生成一次匹配成功的账本");
+            for (int i = 0; i < company.Count; i++)
             {
-                foreach (LedgerItem baItem in ledger2)
+                for (int j = 0; j < bank.Count; j++)
                 {
-                    if (coItem == baItem)
+                    Debug.Print("正在对比公司项第{0}与银行项第{1}", i, j);
+                    LedgerItem CompanyItem = company[i];
+                    LedgerItem bankItem = bank[j];
+
+                    bool IsBalanced = CompanyItem.Equals(bankItem);
+                    Debug.Print("公司项: ", CompanyItem.ToString());
+                    Debug.Print("银行项: ", bankItem.ToString());
+                    if (IsBalanced)
                     {
-                        if (baItem != null)
-                        {
-                            //coItem.BalanceItem.Add(baItem);
-                            balanced.Add(coItem);
-                            ledger1.Remove(coItem);
-                            ledger2.Remove(baItem);
-                            FoundBalanced++;
-                        }
-                        
+                        Debug.Print("匹配成功！");
+                        //coItem.BalanceItem.Add(baItem);
+                        balanced.Add(company[i]);
+                        balanced.Add(bank[j]);
+                        company.Remove(company[i]);
+                        bank.Remove(bank[j]);
+                        FoundBalanced++;
+
                     }
                 }
             }
-
-            foreach (LedgerItem item in ledger1)
+            for (int i = 0; i < company.Count; i++)
             {
-                unmatched.Add(item);
+                unmatched.Add(company[i]);
             }
-            foreach (LedgerItem item in ledger2)
+            for (int i = 0; i < bank.Count; i++)
             {
-                unmatched.Add(item);
+                unmatched.Add(bank[i]);
             }
 
             return FoundBalanced;
