@@ -57,19 +57,25 @@ namespace HuanweiDZ
                 if (answer == DialogResult.No) return;
                 Debug.Print("双侧同步完成，正在执行平账逻辑");
                 LedgerBalancer b = new LedgerBalancer();
-                Ledger BalancedLedger, UnMatchedLedger;
-
+                Ledger BalancedLedger;
+                //需要更好的对账机制
                 string message = string.Format("##### 以下为平账款项，共{0}条 #####\r\n"
-                    , b.StartBalanceWork(comLedger, bankLedger, out BalancedLedger, out UnMatchedLedger));
+                    , b.StartBalanceWork(comLedger, bankLedger, out BalancedLedger));
                 for (int i = 0; i < BalancedLedger.Count; i++)
                 {
                     message += BalancedLedger[i].ToString() + "\r\n";
                 }
-                message += "##### 以下为未平账目 #####\r\n";
-                for (int i = 0; i < UnMatchedLedger.Count; i++)
+                message += "##### 以下为公司侧未平账目 #####\r\n";
+                for (int i = 0; i < comLedger.Count; i++)
                 {
-                    message += UnMatchedLedger[i].ToString() + "\r\n";
+                    message += comLedger[i].ToString() + "\r\n";
                 }
+                message += "##### 以下为银行侧未平账目 #####\r\n";
+                for (int i = 0; i < bankLedger.Count; i++)
+                {
+                    message += bankLedger[i].ToString() + "\r\n";
+                }
+
                 textBox3.Text = message;
             }
         }
