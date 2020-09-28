@@ -11,6 +11,7 @@
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -46,7 +47,6 @@
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             this.textBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.txb_DragDrop_Company);
             this.textBox1.DragOver += new System.Windows.Forms.DragEventHandler(this.tbx_DragOver);
-            //this.textBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txb_MouseDoubleClick);
             // 
             // textBox2
             // 
@@ -60,7 +60,6 @@
             this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             this.textBox2.DragDrop += new System.Windows.Forms.DragEventHandler(this.txb_DragDrop_Bank);
             this.textBox2.DragOver += new System.Windows.Forms.DragEventHandler(this.tbx_DragOver);
-            //this.textBox2.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txb_MouseDoubleClick);
             // 
             // label1
             // 

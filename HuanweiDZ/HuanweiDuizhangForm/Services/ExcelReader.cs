@@ -78,7 +78,7 @@ namespace HuanweiDZ.Services
 
                 MessageBox.Show(
                     "文件读写遇到了错误。\r\n请检查目标工作簿是否已经打开或者被其他程序占用。\r\n请释放工作簿后再次尝试。",
-                    "发生了错误：目标文件被程序占用。",
+                    "发生了错误：目标文件被程序占用。\r\n" + exp.Message,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning
                     );

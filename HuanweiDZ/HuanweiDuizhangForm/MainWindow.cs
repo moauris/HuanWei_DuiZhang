@@ -58,7 +58,11 @@ namespace HuanweiDZ
                 Debug.Print("双侧同步完成，正在执行平账逻辑");
                 LedgerBalancer b = new LedgerBalancer();
                 Ledger BalancedLedger;
-                //需要更好的对账机制
+                //TODO: 需要更好的对账机制
+
+
+                //TODO: 循环每一条账目，并且生成相应的网页
+
                 string message = string.Format("##### 以下为平账款项，共{0}条 #####\r\n"
                     , b.StartBalanceWork(comLedger, bankLedger, out BalancedLedger));
                 for (int i = 0; i < BalancedLedger.Count; i++)
