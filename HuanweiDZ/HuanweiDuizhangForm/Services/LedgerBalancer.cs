@@ -45,6 +45,7 @@ namespace HuanweiDZ.Services
                         balanced.Add(bank[j]);
                         company.Remove(company[i]);
                         bank.Remove(bank[j]);
+                        i--; j--; //移除一位i和j之后，需要重新判定新的同一位置，不然会有跳过的项目
                         FoundBalanced++;
 
                     }

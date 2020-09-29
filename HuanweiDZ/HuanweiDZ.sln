@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HuanweiDZ", "HuanweiDuizhangForm\HuanweiDZ.csproj", "{A7612433-8E45-40A2-8DEB-D16304441F56}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HuanweiDZTests", "HuanweiDZTests\HuanweiDZTests.csproj", "{EF2EB66C-C4AD-4D01-87C7-85AE5CC4A295}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{A7612433-8E45-40A2-8DEB-D16304441F56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7612433-8E45-40A2-8DEB-D16304441F56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7612433-8E45-40A2-8DEB-D16304441F56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF2EB66C-C4AD-4D01-87C7-85AE5CC4A295}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF2EB66C-C4AD-4D01-87C7-85AE5CC4A295}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF2EB66C-C4AD-4D01-87C7-85AE5CC4A295}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF2EB66C-C4AD-4D01-87C7-85AE5CC4A295}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

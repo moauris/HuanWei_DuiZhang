@@ -122,13 +122,38 @@ namespace HuanweiDZ.Components
         public double Sum()
         {
             double TotalCredit = 0d, TotalDebit = 0d;
-            foreach (LedgerItem item in _contents)
+            
+            for (int i = 0; i < this.Count; i++)
             {
-                TotalCredit += item.Credit;
-                TotalDebit += item.Debit;
+                TotalCredit += this[i].Credit;
+                TotalDebit += this[i].Debit;
             }
+                
 
             return TotalDebit - TotalCredit;
+        }
+
+        public void Sort()
+        {
+            //以 Debit 为基准进行一个 Descending 排序
+            int len = this.Count;
+            int maxIndex;
+            LedgerItem temp;
+            for (int i = 0; i < len - 1; i++)
+            {
+                maxIndex = i;
+                for (int j = i + 1; j < len; j++)
+                {
+                    if (this[j] > this[maxIndex])
+                    {
+                        maxIndex = j;
+                    }
+                }
+                temp = this[i];
+                this[i] = this[maxIndex];
+                this[maxIndex] = temp;
+            }
+
         }
         #endregion
 

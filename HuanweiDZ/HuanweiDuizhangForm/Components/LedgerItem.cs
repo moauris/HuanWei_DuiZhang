@@ -37,6 +37,20 @@ namespace HuanweiDZ.Components
                 RemainingFund);
         }
 
+        public static bool operator >(LedgerItem left, LedgerItem right)
+        {
+            double leftSum = left.Debit - left.Credit;
+            double rightSum = right.Debit - right.Credit;
+            return leftSum > rightSum;
+
+        }
+        public static bool operator <(LedgerItem left, LedgerItem right)
+        {
+            double leftSum = left.Debit - left.Credit;
+            double rightSum = right.Debit - right.Credit;
+            return leftSum < rightSum;
+        }
+
         public static LedgerItem Parse(string[] Line, string side)
         {
             //判定输入字符串是否符合标准 例
@@ -45,6 +59,7 @@ namespace HuanweiDZ.Components
             //两侧符合要求的对象：第0-4不为空，5或6至少有一位不为空，不为空时可以被转换为double。7为平、借、或者贷，余额为double
 
             //是否大于8项，否则返回null
+            if (Line.Length < 7) return null;
             double[] CreditDebitRemain = new double[] { 0, 0, 0 };
             string LedgerInfo = "";
             for (int i = 0; i < 5; i++)
