@@ -61,7 +61,41 @@ namespace HuanweiDZ.Services
                 unmatched.Add(bank[i]);
             }
             */
+
+            //TODO: 当前一次对账完成，需要进行【一对多】项目的对账
+            //首先是左对右的【一对多】
+            //MultiBalancer(company, bank);
+
+
             return FoundBalanced;
+        }
+
+        private void MultiBalancer(Ledger left, Ledger right)
+        {
+            left.Sort();
+            right.Sort();
+            for (int i = 0; i < left.Count; i++)
+            {
+                int j = 0;
+                double rightSum = 0;
+                do
+                {
+                    if (true)   //如果左侧比右侧大，则开始判定循环
+                    {
+                        do
+                        {
+                            rightSum += right[j].Debit - right[j].Credit;       //对 rightSum 进行增长
+
+                        } while (rightSum < (left[i].Debit - left[i].Credit));  //当右侧的和超过左侧时， 跳出循环，重置 rightSum,
+                    }
+                    else
+                    {
+
+                    }
+
+                    j++;
+                } while (j < right.Count);
+            }
         }
 
     }
