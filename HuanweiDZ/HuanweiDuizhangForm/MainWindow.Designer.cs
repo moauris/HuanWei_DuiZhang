@@ -44,7 +44,6 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(422, 83);
             this.textBox1.TabIndex = 0;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             this.textBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.txb_DragDrop_Company);
             this.textBox1.DragOver += new System.Windows.Forms.DragEventHandler(this.tbx_DragOver);
             // 
@@ -57,7 +56,6 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(422, 83);
             this.textBox2.TabIndex = 0;
-            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             this.textBox2.DragDrop += new System.Windows.Forms.DragEventHandler(this.txb_DragDrop_Bank);
             this.textBox2.DragOver += new System.Windows.Forms.DragEventHandler(this.tbx_DragOver);
             // 
@@ -79,7 +77,6 @@
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(907, 383);
             this.textBox3.TabIndex = 2;
-            this.textBox3.TextChanged += new System.EventHandler(this.textBox3_TextChanged);
             // 
             // Form1
             // 

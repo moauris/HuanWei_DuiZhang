@@ -113,19 +113,21 @@ namespace HuanweiDZ
                         , BalancedLedger[i].Side);
                     message += string.Format("\t\t\t<td>{0}</td>\r\n"
                         , BalancedLedger[i].Info); 
-                    message += string.Format("\t\t\t<td>{0}</td>\r\n"
+                    message += string.Format("\t\t\t<td id=\"money\">￥{0:N2}</td>\r\n"
                         , BalancedLedger[i].Credit);
-                    message += string.Format("\t\t\t<td>{0}</td>\r\n"
+                    message += string.Format("\t\t\t<td id=\"money\">￥{0:N2}</td>\r\n"
                         , BalancedLedger[i].Debit);
                     message += string.Format("\t\t\t<td>{0}</td>\r\n"
                         , BalancedLedger[i].Direction);
-                    message += string.Format("\t\t\t<td>{0}</td>\r\n"
+                    message += string.Format("\t\t\t<td id=\"money\">￥{0:N2}</td>\r\n"
                         , BalancedLedger[i].RemainingFund);
                     message += "\t\t</tr>\r\n";
 
                 }
                 message += "\t</table>\r\n";
                 textBox3.Text = message;
+                MasterWindow window = new MasterWindow();
+                window.ShowDialog();
             }
         }
 
@@ -231,43 +233,5 @@ namespace HuanweiDZ
             }
         }
         */
-        private void reportReaderProgress(object sender, ProgressChangedEventArgs e)
-        {
-            Debug.Print("Progress: {0}, Message: {1}", e.ProgressPercentage, e.UserState);
-        }
-
-        
-
-        private void txb_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            /*
-            OpenFileDialog fileDlg = new OpenFileDialog();
-            fileDlg.Filter = "Excel 工作簿|*.xls|Excel 工作簿|*.xlsx";
-
-            if (fileDlg.ShowDialog() != DialogResult.OK)
-            {
-                MessageBox.Show("没有选择文件", "没有文件");
-            }
-            TextBox tbx = (TextBox)sender;
-            tbx.Text = fileDlg.FileName;
-            ReadFromFile(tbx.Text);
-            */
-            throw new NotImplementedException();
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox3_TextChanged(object sender, EventArgs e)
-        {
-
-        }
     }
 }

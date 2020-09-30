@@ -15,6 +15,7 @@ namespace HuanweiDZ
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            //Application.Run(new MasterWindow());
             Application.Run(new MainWindow());
         }
     }
