@@ -210,7 +210,7 @@ namespace HuanweiDZ.Services
             };
             switch (side)
             {
-                case "company":
+                case "公司":
                     offset.Identifier = 3;
                     offset.Summary = 4;
                     offset.Debit = 5;
@@ -218,7 +218,7 @@ namespace HuanweiDZ.Services
                     offset.Direction = 7;
                     offset.RemainingFund = 8;
                 break;
-                case "bank":
+                case "银行":
                     offset.Identifier = 2;
                     offset.Summary = 3;
                     offset.Debit = 5;
