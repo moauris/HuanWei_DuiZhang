@@ -57,20 +57,77 @@ namespace HuanweiDZ
                 if (answer == DialogResult.No) return;
                 Debug.Print("双侧同步完成，正在执行平账逻辑");
                 LedgerBalancer b = new LedgerBalancer();
-                Ledger BalancedLedger, UnMatchedLedger;
+                Ledger BalancedLedger;
+                //TODO: 需要更好的对账机制
 
+
+                //TODO: 循环每一条账目，并且生成相应的网页
+                /*
+                 * <table class="result balanced" width="auto">
+                 * <tr>
+                 * <th/>
+                 * </tr>
+                 * <tr>
+                 * <td/>
+                 * </tr>
+                 * ...
+                 * </table>
+                 * 
+                 */
+
+
+                /*
                 string message = string.Format("##### 以下为平账款项，共{0}条 #####\r\n"
-                    , b.StartBalanceWork(comLedger, bankLedger, out BalancedLedger, out UnMatchedLedger));
+                    , b.StartBalanceWork(comLedger, bankLedger, out BalancedLedger));
                 for (int i = 0; i < BalancedLedger.Count; i++)
                 {
                     message += BalancedLedger[i].ToString() + "\r\n";
                 }
-                message += "##### 以下为未平账目 #####\r\n";
-                for (int i = 0; i < UnMatchedLedger.Count; i++)
+                message += "##### 以下为公司侧未平账目 #####\r\n";
+                for (int i = 0; i < comLedger.Count; i++)
                 {
-                    message += UnMatchedLedger[i].ToString() + "\r\n";
+                    message += comLedger[i].ToString() + "\r\n";
                 }
+                message += "##### 以下为银行侧未平账目 #####\r\n";
+                for (int i = 0; i < bankLedger.Count; i++)
+                {
+                    message += bankLedger[i].ToString() + "\r\n";
+                }
+                */
+                string message = string.Format("<p>##### 以下为平账款项，共{0}条 #####</p>\r\n", b.StartBalanceWork(comLedger, bankLedger, out BalancedLedger));
+                message += "\t<table class=\"result balanced\" style=\"width:100%\">\r\n";
+                message += "\t\t<tr>\r\n";
+                message += "\t\t\t<th>侧</th>\r\n";
+                message += "\t\t\t<th>款项信息</th>\r\n";
+                message += "\t\t\t<th>借方</th>\r\n";
+                message += "\t\t\t<th>贷方</th>\r\n";
+                message += "\t\t\t<th>方向</th>\r\n";
+                message += "\t\t\t<th>余额</th>\r\n";
+                message += "\t\t</tr>\r\n";
+
+                for (int i = 0; i < BalancedLedger.Count; i++)
+                {
+                    //message += BalancedLedger[i].ToString() + "\r\n";
+                    message += "\t\t<tr>\r\n";
+                    message += string.Format("\t\t\t<td>{0}</td>\r\n"
+                        , BalancedLedger[i].Side);
+                    message += string.Format("\t\t\t<td>{0}</td>\r\n"
+                        , BalancedLedger[i].Info); 
+                    message += string.Format("\t\t\t<td id=\"money\">￥{0:N2}</td>\r\n"
+                        , BalancedLedger[i].Credit);
+                    message += string.Format("\t\t\t<td id=\"money\">￥{0:N2}</td>\r\n"
+                        , BalancedLedger[i].Debit);
+                    message += string.Format("\t\t\t<td>{0}</td>\r\n"
+                        , BalancedLedger[i].Direction);
+                    message += string.Format("\t\t\t<td id=\"money\">￥{0:N2}</td>\r\n"
+                        , BalancedLedger[i].RemainingFund);
+                    message += "\t\t</tr>\r\n";
+
+                }
+                message += "\t</table>\r\n";
                 textBox3.Text = message;
+                MasterWindow window = new MasterWindow();
+                window.ShowDialog();
             }
         }
 
@@ -102,12 +159,12 @@ namespace HuanweiDZ
                 TextBox tbx = (TextBox)sender;
                 tbx.Text = files.First();
                 //生成对账条目对象实例
-                //Read(tbx.Text, "company");
+                //Read(tbx.Text, "公司");
                 //ExcelReader reader = new ExcelReader();
                 ExcelReaderXLSReader xlsReader = new ExcelReaderXLSReader();
-                comLedger = xlsReader.Read(tbx.Text, "Company");
+                comLedger = xlsReader.Read(tbx.Text, "公司");
                 //reader.ProgressChanged += reportReaderProgress;
-                //comLedger = reader.ReadFromFile(tbx.Text, "company");
+                //comLedger = reader.ReadFromFile(tbx.Text, "公司");
                 //OnSideLedgerFulfilled(Fulfilled.Company);
 
                 //MessageBox.Show(string.Format("The Ledger size is {0}", comLedger.Count),"Starting Showing in TextBox");
@@ -137,13 +194,12 @@ namespace HuanweiDZ
                 TextBox tbx = (TextBox)sender;
                 tbx.Text = files.First();
                 ExcelReaderXLSReader xlsReader = new ExcelReaderXLSReader();
-                bankLedger = xlsReader.Read(tbx.Text, "Bank");
+                bankLedger = xlsReader.Read(tbx.Text, "银行");
                 //生成对账条目对象实例
-                //Read(tbx.Text, "bank");
+                //Read(tbx.Text, "银行");
                 //ExcelReader reader = new ExcelReader();
-                //bankLedger = reader.ReadFromFile(tbx.Text, "bank");
+                //bankLedger = reader.ReadFromFile(tbx.Text, "银行");
                 //OnSideLedgerFulfilled(Fulfilled.Bank);
-                MessageBox.Show(string.Format("The Ledger size is {0}", comLedger.Count), "Starting Showing in TextBox");
                 string message = textBox3.Text;
                 for (int i = 0; i < bankLedger.Count; i++)
                 {
@@ -177,43 +233,5 @@ namespace HuanweiDZ
             }
         }
         */
-        private void reportReaderProgress(object sender, ProgressChangedEventArgs e)
-        {
-            Debug.Print("Progress: {0}, Message: {1}", e.ProgressPercentage, e.UserState);
-        }
-
-        
-
-        private void txb_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            /*
-            OpenFileDialog fileDlg = new OpenFileDialog();
-            fileDlg.Filter = "Excel 工作簿|*.xls|Excel 工作簿|*.xlsx";
-
-            if (fileDlg.ShowDialog() != DialogResult.OK)
-            {
-                MessageBox.Show("没有选择文件", "没有文件");
-            }
-            TextBox tbx = (TextBox)sender;
-            tbx.Text = fileDlg.FileName;
-            ReadFromFile(tbx.Text);
-            */
-            throw new NotImplementedException();
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox3_TextChanged(object sender, EventArgs e)
-        {
-
-        }
     }
 }

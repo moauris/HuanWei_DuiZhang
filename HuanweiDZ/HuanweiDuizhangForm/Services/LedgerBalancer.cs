@@ -10,19 +10,20 @@ namespace HuanweiDZ.Services
     class LedgerBalancer
     {
         
-        public int StartBalanceWork(Ledger company, Ledger bank, out Ledger balanced, out Ledger unmatched)
+        public int StartBalanceWork(Ledger company, Ledger bank, out Ledger balanced)
         {
             int FoundBalanced = 0;
             if (company == null || bank == null)
             {
                 balanced = null;
-                unmatched = null;
+                //unmatched = null;
                 return -1;
             }
+
             //开始对账活动
             Debug.Print("开始对账工作：");
             balanced = new Ledger();
-            unmatched = new Ledger();
+            //unmatched = new Ledger();
 
             //由公司侧开始循环，寻找所有匹配的银行账目， 生成一次匹配成功的账本
             Debug.Print("由公司侧开始循环，寻找所有匹配的银行账目， 生成一次匹配成功的账本");
@@ -35,8 +36,8 @@ namespace HuanweiDZ.Services
                     LedgerItem bankItem = bank[j];
 
                     bool IsBalanced = CompanyItem.Equals(bankItem);
-                    Debug.Print("公司项: ", CompanyItem.ToString());
-                    Debug.Print("银行项: ", bankItem.ToString());
+                    Debug.Print("公司项: {0}", CompanyItem.ToString());
+                    Debug.Print("银行项: {0}", bankItem.ToString());
                     if (IsBalanced)
                     {
                         Debug.Print("匹配成功！");
@@ -50,6 +51,7 @@ namespace HuanweiDZ.Services
                     }
                 }
             }
+            /* 保持原有的两侧对象
             for (int i = 0; i < company.Count; i++)
             {
                 unmatched.Add(company[i]);
@@ -58,7 +60,7 @@ namespace HuanweiDZ.Services
             {
                 unmatched.Add(bank[i]);
             }
-
+            */
             return FoundBalanced;
         }
 

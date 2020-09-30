@@ -78,7 +78,7 @@ namespace HuanweiDZ.Services
 
                 MessageBox.Show(
                     "文件读写遇到了错误。\r\n请检查目标工作簿是否已经打开或者被其他程序占用。\r\n请释放工作簿后再次尝试。",
-                    "发生了错误：目标文件被程序占用。",
+                    "发生了错误：目标文件被程序占用。\r\n" + exp.Message,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning
                     );
@@ -210,7 +210,7 @@ namespace HuanweiDZ.Services
             };
             switch (side)
             {
-                case "company":
+                case "公司":
                     offset.Identifier = 3;
                     offset.Summary = 4;
                     offset.Debit = 5;
@@ -218,7 +218,7 @@ namespace HuanweiDZ.Services
                     offset.Direction = 7;
                     offset.RemainingFund = 8;
                 break;
-                case "bank":
+                case "银行":
                     offset.Identifier = 2;
                     offset.Summary = 3;
                     offset.Debit = 5;
